@@ -83,9 +83,11 @@
                                  [pjstadig/humane-test-output "0.8.3"]
                                  [binaryage/devtools "0.9.8"]
                                  [com.cemerick/piggieback "0.2.2"]
+                                 [org.clojure/tools.nrepl "0.2.12"]
                                  [doo "0.1.8"]
                                  [figwheel-sidecar "0.5.14"]
                                  [re-frisk "0.5.3"]]
+
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
                                  [lein-doo "0.1.8"]
                                  [lein-figwheel "0.5.14"]
@@ -110,7 +112,8 @@
                   :doo {:build "test"}
                   :source-paths ["env/dev/clj"]
                   :resource-paths ["env/dev/resources"]
-                  :repl-options {:init-ns user}
+                  :repl-options {:init-ns user
+                                 :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]}
    :project/test {:resource-paths ["env/test/resources"]

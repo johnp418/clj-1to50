@@ -12,21 +12,33 @@
    (:active-panel db)))
 
 (re-frame/reg-sub
-  ::board-state
+  ::board
   (fn [db _]
     (:board db)))
 
-(re-frame/reg-sub
-  ::board-rows
-  (fn [db _]
-    (let [{:keys [row-n col-n board]} db]
-      (partition col-n board))))
+;(re-frame/reg-sub
+;  ::board-rows
+;  (fn [db _]
+;    (let [{:keys [row-n col-n board]} db]
+;      (partition col-n (take 25 board)))))
 
 (re-frame/reg-sub
-  ::match-tile
+  ::next-tile
   (fn [db _]
-    (:last-tile db)))
-;
-;(re-frame/reg-sub
-;  ::add-tile
-;  )
+    (:next-tile db)))
+
+(re-frame/reg-sub
+  ::score
+  (fn [db _]
+    (:score db)))
+
+
+(re-frame/reg-sub
+  ::timer
+  (fn [db _]
+    (:timer db)))
+
+(re-frame/reg-sub
+  ::started
+  (fn [db _]
+    (:started db)))

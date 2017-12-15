@@ -1,9 +1,4 @@
-(ns one-to-fifty.db)
+(ns one-to-fifty.db
+  (:require [one-to-fifty.game :as game]))
 
-(def default-db
-  {:name  "1 to 50"
-   :row-n 5
-   :col-n 5
-   :score 0
-   :last-tile  26
-   :board []})
+(def default-db game/initial-state)

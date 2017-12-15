@@ -2,15 +2,19 @@
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
             [secretary.core :as secretary]
-            [goog.events :as events]
+            [goog.events :as gevents]
             [goog.history.EventType :as HistoryEventType]
             [markdown.core :refer [md->html]]
             [ajax.core :refer [GET POST]]
             [one-to-fifty.ajax :refer [load-interceptors!]]
-            [one-to-fifty.events])
+            [one-to-fifty.events :as events]
+            [one-to-fifty.views :refer [main-panel]]
+            [re-frame.core :as re-frame])
   (:import goog.History))
 
-
+;; Page
+(defn page []
+  (main-panel))
 
 
 ;; -------------------------
@@ -18,7 +22,7 @@
 ;; must be called after routes have been defined
 (defn hook-browser-navigation! []
   (doto (History.)
-    (events/listen
+    (gevents/listen
       HistoryEventType/NAVIGATE
       (fn [event]
         (secretary/dispatch! (.-token event))))
@@ -26,16 +30,28 @@
 
 ;; -------------------------
 ;; Initialize app
-(defn fetch-docs! []
-  (GET "/docs" {:handler #(rf/dispatch [:set-docs %])}))
 
 (defn mount-components []
   (rf/clear-subscription-cache!)
   (r/render [#'page] (.getElementById js/document "app")))
 
+(defn app-routes []
+  (secretary/set-config! :prefix "#")
+  ;; --------------------
+  ;; define routes here
+  (secretary/defroute "/" []
+            (re-frame/dispatch [::events/set-active-panel :home-panel]))
+
+  (secretary/defroute "/about" []
+            (re-frame/dispatch [::events/set-active-panel :about-panel]))
+
+  ;; --------------------
+  (hook-browser-navigation!))
+
+
 (defn init! []
-  (rf/dispatch-sync [:initialize-db])
+  (app-routes)
+  (rf/dispatch-sync [::events/initialize-db])
   (load-interceptors!)
-  (fetch-docs!)
   (hook-browser-navigation!)
   (mount-components))
