@@ -5,32 +5,20 @@
 (def win-tile (-> (* cols cols)
                   (* 2)))
 
-
-(defn generate []
-  (partition cols (->> (drop 1 (range))
-                      (take (* cols cols))
-                      (shuffle))))
-
-(defn new-board []
-  (let [board (generate)
-        map-col (fn [row]
-                  (fn [k v]
-                    {:row row :col k :value v}))
-        map-row (fn [row_i row]
-                  (vec (map-indexed (map-col row_i) row)))
-        new (vec (map-indexed map-row board))]
-    ;(println "Board =>" new)
-    new))
-
-;(defn new-board []
-;  )
+(defn generate-board []
+  (vec
+    (->> (drop 1 (range))
+         (take (* cols cols))
+         (shuffle))))
 
 (def initial-state
-  {:name  "1 to 50"
-   :score 0
+  {:score 0
+   :rows cols
+   :cols cols
    :timer nil
    :next-tile 1
    :started false
    :win-tile win-tile
    :last-tile (* cols cols)
-   :board (new-board)})
+   :board {:cols cols :data (generate-board)}})
+

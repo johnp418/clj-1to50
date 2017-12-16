@@ -1,6 +1,8 @@
 (ns one-to-fifty.subs
   (:require [re-frame.core :as re-frame]))
 
+(defn my-sub [k])
+
 (re-frame/reg-sub
  ::name
  (fn [db]

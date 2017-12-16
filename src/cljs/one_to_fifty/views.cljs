@@ -4,23 +4,10 @@
             [one-to-fifty.game :refer [win-tile]]
             [reagent.core :as r]))
 
-(defn tile [{:keys [row col value]}]
-  (let [next-tile @(re-frame/subscribe [::subs/next-tile])]
-    [:div.tile {:on-click
-                (if (= next-tile value)
-                  (fn [e]
-                    (js/console.log "Clicked " value " Next " next-tile)
-                    (if (= win-tile value)
-                      (re-frame/dispatch [:win])
-                      (re-frame/dispatch [:click-tile row col value])))
-                  (fn [e]
-                    (js/console.log "Not an answer, next is " next-tile)))
-                } value]))
-
-(defn row [items]
-  [:div.board-row
-   (for [{:keys [row col value] :as v} items]
-     ^{:key (str "row-" row "-col-" col)} [tile v])])
+(defn tile [idx value]
+  [:div.tile
+   {:on-click #(re-frame/dispatch [:click-tile idx value])}
+   value])
 
 ;; Game status
 (defn status []
@@ -29,33 +16,43 @@
     [:div.status
      ;[timer]
      [:div.hint
-      [:h3 (str "Next tile:" next-tile)]]
+      [:h3 (str "Next tile   :" next-tile)]]
      [:div.score
       [:h3 (str "Score:" score)]]]))
 
 
+(defn board-inner [{:as board :keys [cols data]}]
+  [:div.board
+   (if board
+     (let [width (str (/ 100 cols) "%")]
+       (->> (map-indexed
+              (fn [idx v]
+                ^{:key (str "tile-" idx)}
+                ;; Row
+                [:div {:style {:width width :height width}}
+                 [tile idx v]])
+              )))
+
+     ;; Empty board
+     "Empty")])
+
 ;; Board component
-(defn board []
+(defn board-section []
   (let [board @(re-frame/subscribe [::subs/board])
         started @(re-frame/subscribe [::subs/started])]
-    [:div.game #_{:on-click (fn []
-                              (re-frame/dispatch [:test "random value"]))}
+    [:div.game
+
+     ;; Game status
      [status]
      (if (not started)
+
+       ;; Start button
        [:div.start
         [:button {:on-click #(re-frame/dispatch [:start-game])} "Start"]]
-       [:div.board
-        (if board
-          (map-indexed (fn [idx v]
-                         ^{:key (str "row-" idx)} [row v]) board)
-          "Empty")])
 
-     #_(if board
-         (do
-           (println board)
-           (for [{:keys [row col value] :as t} board]
-             ^{:key (str "row-" row "-col-" col)} [tile t]))
-         "Empty")]))
+       ;; Board
+       [board-inner board]
+       )]))
 
 ;; home
 (defn home-panel []
