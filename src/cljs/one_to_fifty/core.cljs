@@ -2,12 +2,15 @@
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
             [secretary.core :as secretary]
+            [bidi.bidi :as bidi]
+            [pushy.core :as pushy]
             [goog.events :as gevents]
             [goog.history.EventType :as HistoryEventType]
             [markdown.core :refer [md->html]]
             [ajax.core :refer [GET POST]]
             [one-to-fifty.ajax :refer [load-interceptors!]]
-            [one-to-fifty.events :as events]
+            [one-to-fifty.routes :as routes]
+            [one-to-fifty.main.events :as events]
             [one-to-fifty.views :refer [main-panel]]
             [re-frame.core :as re-frame])
   (:import goog.History))
@@ -15,6 +18,15 @@
 ;; Page
 (defn page []
   (main-panel))
+
+;
+;(defmulti gen-game
+;          (fn [arg]
+;            (:type arg)))
+;
+;(defmethod gen-game :1to50
+;  )
+
 
 
 ;; -------------------------
@@ -40,10 +52,10 @@
   ;; --------------------
   ;; define routes here
   (secretary/defroute "/" []
-            (re-frame/dispatch [::events/set-active-panel :home-panel]))
+                      (re-frame/dispatch [::events/set-active-panel :home-panel]))
 
   (secretary/defroute "/about" []
-            (re-frame/dispatch [::events/set-active-panel :about-panel]))
+                      (re-frame/dispatch [::events/set-active-panel :about-panel]))
 
   ;; --------------------
   (hook-browser-navigation!))

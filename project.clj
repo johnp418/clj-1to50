@@ -3,11 +3,13 @@
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
 
-  :dependencies [[clj-time "0.14.2"]
+  :dependencies [[bidi "2.1.2"]
+                 [clj-time "0.14.2"]
                  [cljs-ajax "0.7.3"]
                  [compojure "1.6.0"]
                  [cprop "0.1.11"]
                  [funcool/struct "1.1.0"]
+                 [kibu/pushy "0.3.8"]
                  [luminus-immutant "0.2.4"]
                  [luminus-nrepl "0.1.4"]
                  [luminus/ring-ttl-session "0.3.2"]

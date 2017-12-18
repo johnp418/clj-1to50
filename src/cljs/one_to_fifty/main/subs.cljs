@@ -1,7 +1,6 @@
-(ns one-to-fifty.subs
+(ns one-to-fifty.main.subs
   (:require [re-frame.core :as re-frame]))
 
-(defn my-sub [k])
 
 (re-frame/reg-sub
  ::name
@@ -17,12 +16,6 @@
   ::board
   (fn [db _]
     (:board db)))
-
-;(re-frame/reg-sub
-;  ::board-rows
-;  (fn [db _]
-;    (let [{:keys [row-n col-n board]} db]
-;      (partition col-n (take 25 board)))))
 
 (re-frame/reg-sub
   ::next-tile
